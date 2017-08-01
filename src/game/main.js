@@ -1,4 +1,4 @@
-MEDIA_PATH = "/assets/flappycoin-game/";
+MEDIA_PATH = "";
 game.module(
   'game.main'
 )

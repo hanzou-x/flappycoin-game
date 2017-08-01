@@ -354,7 +354,7 @@ var core = {
         this.modules[name] = true;
         this._waitForLoad++;
 
-        var path = '/assets/flappycoin-game/src/' + name.replace(/\./g, '/') + '.js' + this.nocache;
+        var path = 'src/' + name.replace(/\./g, '/') + '.js' + this.nocache;
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = path;
