@@ -121,7 +121,7 @@ game.module(
     },
 
     showScore: function() {
-      var box = new game.Sprite(game.system.width / 2, game.system.height / 2, MEDIA_PATH + 'media/gameover.png', {anchor: {x:0.5, y:0.5}});
+      var box = new game.Sprite(game.system.width / 2, game.system.height / 4, MEDIA_PATH + 'media/gameover.png', {anchor: {x:0.5, y:0.5}});
 
       var highScore = parseInt(game.storage.get('highScore')) || 0;
       if(this.score > highScore) game.storage.set('highScore', this.score);
@@ -143,6 +143,8 @@ game.module(
         scale: {x:0, y:0},
         interactive: true,
         mousedown: function() {
+          var textbox_element = document.getElementById("textbox_container");
+          textbox_element.style.visibility = 'hidden';
           game.system.setScene(SceneGame);
         }
       });
@@ -166,6 +168,24 @@ game.module(
       } else {
         this.showRestartButton();
       }
+
+      var msg;
+      if (this.score < 8) {
+        msg = 'Try harder';
+      } else if (this.score < 10) {
+        msg = 'Almost! Try again';
+      } else {
+        payout = 10 + (this.score - 10) * 2;
+        msg = 'Won ' + payout + ' FLAP!';
+        var textbox_element = document.getElementById("textbox_container");
+        textbox_element.style.visibility = 'visible';
+      }
+      this.tauntText = new game.BitmapText(msg, {font: 'Pixel'});
+      this.tauntText.tint = 0xdd5533;
+      this.tauntText.updateText();
+      this.tauntText.position.x = game.system.width / 2 - this.tauntText.textWidth / 2;
+      this.tauntText.position.y = game.system.height * 13 / 32;
+      this.stage.addChild(this.tauntText);
     },
 
     showRestartButton: function() {
