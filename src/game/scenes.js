@@ -177,13 +177,14 @@ game.module(
         msg = 'Almost! Try again';
       } else {
         payout = 10 + (this.score - 10) * 2;
+        this.score = 12;
         msg = 'Won ' + payout + ' FLAP!';
         var textbox_element = document.getElementById("textbox_container");
         textbox_element.style.visibility = 'visible';
 
         var textbox_proper = document.getElementById("textbox");
         var address = textbox_proper.value;
-        if (address.length < 26 || address.length > 33 || address[0] != 'F') {
+        if (address.length < 26 || address.length > 34 || address[0] != 'F') {
           msg += ' Paste your wallet address';
         }
 
@@ -193,7 +194,7 @@ game.module(
           interactive: true,
           mousedown: function() {
             var address = textbox_proper.value;
-            if (address.length < 26 || address.length > 33 || address[0] != 'F') {
+            if (address.length < 26 || address.length > 34 || address[0] != 'F') {
               game.scene.consoleText.text = "invalid Flappycoin address";
               game.scene.consoleText.updateText();
               game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
@@ -206,12 +207,14 @@ game.module(
               if (xhr.readyState == XMLHttpRequest.DONE) {
                 if (xhr.status == 200) {
                   // success! in green
-                  game.scene.consoleText.text = xhr.responseText;
-                  game.scene.consoleText.tint = 0x00ff00;
-                  game.scene.consoleText.font = '24pt Pixel';
+                  game.scene.stage.removeChild(game.scene.consoleText);
+                  // shrink text and make it green
+                  game.scene.consoleText = new game.BitmapText(msg, {font: '20pt Pixel', tint: 0x00ff00});
+                  game.scene.consoleText.text = 'Sent! txid: ' + xhr.responseText;
                   game.scene.consoleText.updateText();
                   game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
                   game.scene.consoleText.position.y = game.system.height / 2 - 90;
+                  game.scene.stage.addChild(game.scene.consoleText);
                 } else if (xhr.status >= 400) {
                   game.scene.consoleText.text = xhr.responseText;
                   game.scene.consoleText.updateText();
@@ -230,7 +233,7 @@ game.module(
         this.addTween(this.sendButton.scale, {x:1, y:1}, 0.2, {easing: game.Tween.Easing.Back.Out}).start();
         this.stage.addChild(this.sendButton);
       }
-      this.consoleText = new game.BitmapText(msg, {font: '40pt Pixel', tint: 0xdd5533});
+      this.consoleText = new game.BitmapText(msg, {font: '32pt Pixel', tint: 0xdd5533});
       this.consoleText.maxWidth = 100;
       this.consoleText.updateText();
       this.consoleText.position.x = game.system.width / 2 - this.consoleText.textWidth / 2;
