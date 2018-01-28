@@ -209,7 +209,7 @@ game.System = game.Class.extend({
         if(game.System.center) this.canvas.style.margin = 'auto';
 
         if(game.device.mobile) {
-            document.addEventListener('touchstart', function(e) { e.preventDefault(); }, false);
+            document.addEventListener('touchstart', function(e) { /*e.preventDefault();*/ }, false);
 
             var div = document.createElement('div');
             div.innerHTML = game.System.rotateImg ? '' : game.System.rotateMsg;
