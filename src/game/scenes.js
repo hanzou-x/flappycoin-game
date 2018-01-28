@@ -171,13 +171,12 @@ game.module(
 
       var msg;
       var fontname = 'Pixel';
-      if (false && this.score < 8) {
+      if (this.score < 8) {
         msg = 'Try harder';
-      } else if (false && this.score < 10) {
+      } else if (this.score < 10) {
         msg = 'Almost! Try again';
       } else {
         payout = 10 + (this.score - 10) * 2;
-        this.score = 12;
         msg = 'Won ' + payout + ' FLAP!';
         var textbox_element = document.getElementById("textbox_container");
         textbox_element.style.visibility = 'visible';
