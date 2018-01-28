@@ -30,6 +30,7 @@ game.module(
   game.addAsset(MEDIA_PATH + 'media/poweredby.png');
   game.addAsset(MEDIA_PATH + 'media/soundon.png');
   game.addAsset(MEDIA_PATH + 'media/soundoff.png');
+  game.addAsset(MEDIA_PATH + 'media/send.png');
 
   // Font
   game.addAsset(MEDIA_PATH + 'media/font.fnt');

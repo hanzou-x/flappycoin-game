@@ -121,7 +121,7 @@ game.module(
     },
 
     showScore: function() {
-      var box = new game.Sprite(game.system.width / 2, game.system.height / 4, MEDIA_PATH + 'media/gameover.png', {anchor: {x:0.5, y:0.5}});
+      var box = new game.Sprite(game.system.width / 2, game.system.height / 2 - 250, MEDIA_PATH + 'media/gameover.png', {anchor: {x:0.5, y:0.5}});
 
       var highScore = parseInt(game.storage.get('highScore')) || 0;
       if(this.score > highScore) game.storage.set('highScore', this.score);
@@ -170,6 +170,7 @@ game.module(
       }
 
       var msg;
+      var fontname = 'Pixel';
       if (this.score < 8) {
         msg = 'Try harder';
       } else if (this.score < 10) {
@@ -179,12 +180,25 @@ game.module(
         msg = 'Won ' + payout + ' FLAP!';
         var textbox_element = document.getElementById("textbox_container");
         textbox_element.style.visibility = 'visible';
+
+        this.sendButton = new game.Sprite(game.system.width / 2, game.system.height / 2 + 100, MEDIA_PATH + 'media/send.png', {
+          anchor: {x:0.5, y:0.5},
+          scale: {x:0, y:0},
+          interactive: true,
+          mousedown: function() {
+            var textbox_element = document.getElementById("textbox_container");
+            textbox_element.style.visibility = 'hidden';
+            game.system.setScene(SceneGame);
+          }
+        });
+        this.addTween(this.sendButton.scale, {x:1, y:1}, 0.2, {easing: game.Tween.Easing.Back.Out}).start();
+        this.stage.addChild(this.sendButton);
       }
-      this.tauntText = new game.BitmapText(msg, {font: 'Pixel'});
-      this.tauntText.tint = 0xdd5533;
+      this.tauntText = new game.BitmapText(msg, {font: 'Pixel', tint: 0xdd5533});
+      this.tauntText.font = '12px Pixel';
       this.tauntText.updateText();
       this.tauntText.position.x = game.system.width / 2 - this.tauntText.textWidth / 2;
-      this.tauntText.position.y = game.system.height * 13 / 32;
+      this.tauntText.position.y = game.system.height / 2 - 90;
       this.stage.addChild(this.tauntText);
     },
 
