@@ -181,12 +181,17 @@ game.module(
         var textbox_element = document.getElementById("textbox_container");
         textbox_element.style.visibility = 'visible';
 
+        var textbox_proper = document.getElementById("textbox");
+        var address = textbox_proper.value;
+        if (address.length < 26 || address.length > 33 || address[0] != 'F') {
+          msg += ' Paste your wallet address';
+        }
+
         this.sendButton = new game.Sprite(game.system.width / 2, game.system.height / 2 + 100, MEDIA_PATH + 'media/send.png', {
           anchor: {x:0.5, y:0.5},
           scale: {x:0, y:0},
           interactive: true,
           mousedown: function() {
-            var textbox_proper = document.getElementById("textbox");
             var address = textbox_proper.value;
             if (address.length < 26 || address.length > 33 || address[0] != 'F') {
               game.scene.consoleText.text = "invalid Flappycoin address";
@@ -212,19 +217,21 @@ game.module(
                   game.scene.consoleText.updateText();
                   game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
                   game.scene.consoleText.position.y = game.system.height / 2 - 90;
+                  // restore the Send button for potential retry
                   game.scene.stage.addChild(game.scene.sendButton);
                 }
               }
             };
             xhr.open("POST", "/send", true);
             xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify(({"score": game.scene.score, "address": textbox_element.value})));
+            xhr.send(JSON.stringify(({"score": game.scene.score, "address": address})));
           }
         });
         this.addTween(this.sendButton.scale, {x:1, y:1}, 0.2, {easing: game.Tween.Easing.Back.Out}).start();
         this.stage.addChild(this.sendButton);
       }
-      this.consoleText = new game.BitmapText(msg, {font: 'Pixel', tint: 0xdd5533});
+      this.consoleText = new game.BitmapText(msg, {font: '40pt Pixel', tint: 0xdd5533});
+      this.consoleText.maxWidth = 100;
       this.consoleText.updateText();
       this.consoleText.position.x = game.system.width / 2 - this.consoleText.textWidth / 2;
       this.consoleText.position.y = game.system.height / 2 - 90;
