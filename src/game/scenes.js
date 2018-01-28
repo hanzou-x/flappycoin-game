@@ -171,9 +171,9 @@ game.module(
 
       var msg;
       var fontname = 'Pixel';
-      if (this.score < 8) {
+      if (false && this.score < 8) {
         msg = 'Try harder';
-      } else if (this.score < 10) {
+      } else if (false && this.score < 10) {
         msg = 'Almost! Try again';
       } else {
         payout = 10 + (this.score - 10) * 2;
@@ -186,20 +186,49 @@ game.module(
           scale: {x:0, y:0},
           interactive: true,
           mousedown: function() {
-            var textbox_element = document.getElementById("textbox_container");
-            textbox_element.style.visibility = 'hidden';
-            game.system.setScene(SceneGame);
+            var textbox_proper = document.getElementById("textbox");
+            var address = textbox_proper.value;
+            if (address.length < 26 || address.length > 33 || address[0] != 'F') {
+              game.scene.consoleText.text = "invalid Flappycoin address";
+              game.scene.consoleText.updateText();
+              game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
+              game.scene.consoleText.position.y = game.system.height / 2 - 90;
+              return;
+            }
+            game.scene.stage.removeChild(game.scene.sendButton);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.status == 200) {
+                  // success! in green
+                  game.scene.consoleText.text = xhr.responseText;
+                  game.scene.consoleText.tint = 0x00ff00;
+                  game.scene.consoleText.font = '24pt Pixel';
+                  game.scene.consoleText.updateText();
+                  game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
+                  game.scene.consoleText.position.y = game.system.height / 2 - 90;
+                } else if (xhr.status >= 400) {
+                  game.scene.consoleText.text = xhr.responseText;
+                  game.scene.consoleText.updateText();
+                  game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
+                  game.scene.consoleText.position.y = game.system.height / 2 - 90;
+                  game.scene.stage.addChild(game.scene.sendButton);
+                }
+              }
+            };
+            xhr.open("POST", "/send", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify(({"score": game.scene.score, "address": textbox_element.value})));
           }
         });
         this.addTween(this.sendButton.scale, {x:1, y:1}, 0.2, {easing: game.Tween.Easing.Back.Out}).start();
         this.stage.addChild(this.sendButton);
       }
-      this.tauntText = new game.BitmapText(msg, {font: 'Pixel', tint: 0xdd5533});
-      this.tauntText.font = '12px Pixel';
-      this.tauntText.updateText();
-      this.tauntText.position.x = game.system.width / 2 - this.tauntText.textWidth / 2;
-      this.tauntText.position.y = game.system.height / 2 - 90;
-      this.stage.addChild(this.tauntText);
+      this.consoleText = new game.BitmapText(msg, {font: 'Pixel', tint: 0xdd5533});
+      this.consoleText.updateText();
+      this.consoleText.position.x = game.system.width / 2 - this.consoleText.textWidth / 2;
+      this.consoleText.position.y = game.system.height / 2 - 90;
+      this.stage.addChild(this.consoleText);
     },
 
     showRestartButton: function() {
