@@ -217,6 +217,16 @@ game.module(
                   game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
                   game.scene.consoleText.position.y = game.system.height / 2 - 90;
                   game.scene.stage.addChild(game.scene.consoleText);
+                } else if (xhr.status == 202) {
+                  // okay, in yellow
+                  game.scene.stage.removeChild(game.scene.consoleText);
+                  // shrink text and make it yellow
+                  game.scene.consoleText = new game.BitmapText(msg, {font: '20pt Pixel', tint: 0xffff00});
+                  game.scene.consoleText.text = xhr.responseText;
+                  game.scene.consoleText.updateText();
+                  game.scene.consoleText.position.x = game.system.width / 2 - game.scene.consoleText.textWidth / 2;
+                  game.scene.consoleText.position.y = game.system.height / 2 - 90;
+                  game.scene.stage.addChild(game.scene.consoleText);
                 } else if (xhr.status >= 400) {
                   game.scene.consoleText.text = xhr.responseText;
                   game.scene.consoleText.updateText();
