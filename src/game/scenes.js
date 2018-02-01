@@ -177,6 +177,9 @@ game.module(
         msg = 'Almost! Try again';
       } else {
         payout = 10 + (this.score - 10) * 2;
+        if (payout > 100) {
+          payout = 100;
+        }
         msg = 'Won ' + payout + ' FLAP!';
         var textbox_element = document.getElementById("textbox_container");
         textbox_element.style.visibility = 'visible';
@@ -226,7 +229,7 @@ game.module(
             };
             xhr.open("POST", "/send", true);
             xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify(({"score": game.scene.score, "address": address})));
+            xhr.send(JSON.stringify(({"score": game.scene.score, "address": address, "payout": payout})));
           }
         });
         this.addTween(this.sendButton.scale, {x:1, y:1}, 0.2, {easing: game.Tween.Easing.Back.Out}).start();
